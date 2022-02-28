@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![feature(asm)]
+// #![feature(asm)]
 
 extern crate user_lib;
 
@@ -11,7 +11,7 @@ extern crate user_lib;
 pub fn main() -> ! {
     let mut sstatus: usize;
     unsafe {
-        asm!("csrr {}, sstatus", out(reg) sstatus);
+        core::arch::asm!("csrr {}, sstatus", out(reg) sstatus);
     }
     panic!("(-_-) I get sstatus:{:x}\n", sstatus);
 }
