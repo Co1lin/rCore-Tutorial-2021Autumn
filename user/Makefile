@@ -1,5 +1,5 @@
 TARGET := riscv64gc-unknown-none-elf
-MODE := release
+MODE ?= debug
 APP_DIR := src/bin
 TARGET_DIR := target/$(TARGET)/$(MODE)
 BUILD_DIR := build
@@ -16,7 +16,7 @@ endif
 ELFS := $(patsubst $(APP_DIR)/%.rs, $(TARGET_DIR)/%, $(APPS))
 
 elf: $(APPS)
-	@python3 build.py
+	$(PY) build.py --$(MODE)
 
 binary: elf
 	@$(foreach elf, $(ELFS), \

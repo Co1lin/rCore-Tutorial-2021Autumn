@@ -1,6 +1,6 @@
 # Building
 TARGET := riscv64gc-unknown-none-elf
-MODE := release
+MODE ?= debug
 KERNEL_ELF := target/$(TARGET)/$(MODE)/os
 KERNEL_BIN := $(KERNEL_ELF).bin
 
@@ -30,7 +30,7 @@ $(KERNEL_BIN): kernel
 
 kernel:
 	@cd ../user && make build TEST=$(TEST)
-	@cargo build --release
+	@cargo build
 
 clean:
 	@cargo clean

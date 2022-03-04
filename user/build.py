@@ -1,4 +1,10 @@
 import os
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--release', action='store_true')
+parser.add_argument('--debug', action='store_true')
+args = parser.parse_args()
 
 base_address = 0x80400000
 step = 0x20000
@@ -18,7 +24,10 @@ for app in apps:
             lines.append(line)
     with open(linker, 'w+') as f:
         f.writelines(lines)
-    os.system('cargo build --bin %s --release' % app)
+    build_args = ""
+    if args.release:
+        build_args += "--release"
+    os.system(f'cargo build --bin {app} {build_args}')
     print('[build.py] application %s start with address %s' %(app, hex(base_address+step*app_id)))
     with open(linker, 'w+') as f:
         f.writelines(lines_before)
