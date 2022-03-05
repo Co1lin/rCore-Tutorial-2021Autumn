@@ -4,7 +4,7 @@ mod switch;
 mod task;
 
 use crate::config::MAX_APP_NUM;
-use crate::loader::{get_num_app, init_app_cx};
+use crate::loader::{get_num_app, init_app_cx, get_base_i};
 use crate::sync::UPSafeCell;
 use lazy_static::*;
 use switch::__switch;
@@ -124,4 +124,21 @@ pub fn suspend_current_and_run_next() {
 pub fn exit_current_and_run_next() {
     mark_current_exited();
     run_next_task();
+}
+
+pub fn get_current_task_id() -> usize {
+    let inner = TASK_MANAGER.inner.exclusive_access();
+    inner.current_task
+}
+
+pub fn get_current_trap_sp() -> usize {
+    let inner = TASK_MANAGER.inner.exclusive_access();
+    inner.tasks[inner.current_task].task_cx.sp()
+}
+
+pub fn get_current_addr_range() -> (usize, usize) {
+    let inner = TASK_MANAGER.inner.exclusive_access();
+    let start = get_base_i(inner.current_task);
+    let end = get_base_i(inner.current_task + 1);
+    (start, end - 1)
 }
